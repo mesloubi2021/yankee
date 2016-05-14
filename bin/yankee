@@ -12,10 +12,12 @@ const program = commander
 Make sure the changelog is a YAML object with the top-level property
 \`master:\`. If that property contains the key \`breaking changes:\`, we’ll
 make it a major release (X.y.z). If it contains the key \`new features:\`,
-we’ll make a minor bump (x.Y.z). If it contains the property
-\`notes: "Initial release"\`, we’ll release it as 1.0.0. Otherwise, make sure
-your \`master:\` changelog has the key \`fixed bugs:\` – we’ll release it
-as a patch (x.y.Z).
+we’ll make a minor bump (x.Y.z). Otherwise, make sure your \`master:\` changelog
+has the key \`fixed bugs:\` – we’ll release it as a patch (x.y.Z).
+
+The version number against which we’ll be bumping is the first key
+in your \`Changelog.yaml\` except \`master:\`. If there’s no other key, we’ll
+always tag the release as 1.0.0.
 `
   )
   .option('-c, --commit',
