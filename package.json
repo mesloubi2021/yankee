@@ -12,7 +12,9 @@
   "engines": {
     "node": ">=4.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "commander": "^2.9.0"
+  },
   "devDependencies": {
     "coveralls": "^2.11.9",
     "eslint": "^2.10.0",
