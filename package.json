@@ -7,7 +7,7 @@
     "coveralls": "npm run coverage && cat coverage/lcov.info | coveralls",
     "develop": "node-dev --respawn --no-notify --no-deps test.js | tap-spec",
     "test": "eslint . && node test.js | tap-spec",
-    "reshrinkwrap": "rm npm-shrinkwrap.json && npm install && npm shrinkwrap --dev && git commit -m '[npm run shrinkwrap] Update dependencies' npm-shrinkwrap.json package.json"
+    "reshrinkwrap": "rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap --dev && git commit -m '[npm run shrinkwrap] Update dependencies' npm-shrinkwrap.json package.json"
   },
   "engines": {
     "node": ">=4.0.0"
