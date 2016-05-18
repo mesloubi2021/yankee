@@ -28,7 +28,7 @@
     "eslint-plugin-import": "^1.8.0",
     "istanbul": "^0.4.3",
     "mock-fs": "^3.9.0",
-    "node-dev": "^3.1.1",
+    "node-dev": "github:tomekwi/node-dev#271dda7ab71c4aef567f4f61c30e39c5cfe47170",
     "npm": "^3.9.0",
     "tap-spec": "^2.2.2",
     "tape": "^4.5.1",
