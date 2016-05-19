@@ -1,3 +1,5 @@
+require('./test/formatter');
+
 const test = require('tape-catch');
 const u = require('untab');
 const mockFs = require('mock-fs');
