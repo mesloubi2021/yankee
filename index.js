@@ -11,9 +11,16 @@ const error = (message) => (
   tinyError(`Oops! Things went wrong. ${message}`)
 );
 
-// (String, 'breaking' | 'feature' | 'bugfix') => String
-const bumpVersion = (version, bump) => {
-  const versionNumbers = version.split('.').map(Number);
+// (
+//    previousVersion: String,
+//    bump: 'initial' | 'breaking' | 'feature' | 'bugfix'
+// ) => String
+const nextVersion = (previousVersion, bump) => {
+  if (bump === 'initial') {
+    return '1.0.0';
+  }
+
+  const versionNumbers = previousVersion.split('.').map(Number);
   return (
     (bump === 'breaking' &&
       `${versionNumbers[0] + 1}.0.0`
@@ -42,7 +49,6 @@ module.exports = (paramsArg) => {
   const params = paramsArg || {};
   const path = params.path || process.cwd();
   const date = params.date || new Date();
-  const stream = params.stream || process.stdout;
 
   const changelogPath = `${path}/Changelog.yaml`;
   const changelog = yaml.safeLoad(fs.readFileSync(changelogPath, 'utf8'));
@@ -61,16 +67,14 @@ module.exports = (paramsArg) => {
   const changelogWithoutMaster = omit(changelog, 'master');
   const masterData = changelog.master;
   const masterDataKeys = Object.keys(masterData);
-  const currentVersion = Object.keys(changelogWithoutMaster)[0];
-  const newVersion = (
-    (currentVersion && bumpVersion(currentVersion, (
-      (includes(masterDataKeys, 'breaking changes') && 'breaking') ||
-      (includes(masterDataKeys, 'new features') && 'feature') ||
-      'bugfix'
-    ))) ||
-    '1.0.0'
+  const previousVersion = Object.keys(changelogWithoutMaster)[0];
+  const bump = (
+    (!previousVersion && 'initial') ||
+    (includes(masterDataKeys, 'breaking changes') && 'breaking') ||
+    (includes(masterDataKeys, 'new features') && 'feature') ||
+    'bugfix'
   );
-  stream.write(`Detected version ${newVersion}\n`);
+  const newVersion = nextVersion(previousVersion, bump);
 
   const newVersionData = Object.assign({
     date: dateFormat('yyyy-MM-dd', date),
@@ -85,4 +89,10 @@ module.exports = (paramsArg) => {
     .replace(/(.)\n([^\s])/g, '$1\n\n$2');
 
   fs.writeFileSync(changelogPath, newChangelogString);
+
+  return {
+    bump,
+    previousVersion,
+    newVersion,
+  };
 };
