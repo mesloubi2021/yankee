@@ -62,11 +62,14 @@ module.exports = (paramsArg) => {
   const masterData = changelog.master;
   const masterDataKeys = Object.keys(masterData);
   const currentVersion = Object.keys(changelogWithoutMaster)[0];
-  const newVersion = bumpVersion(currentVersion, (
-    (includes(masterDataKeys, 'breaking changes') && 'breaking') ||
-    (includes(masterDataKeys, 'new features') && 'feature') ||
-    'bugfix'
-  ));
+  const newVersion = (
+    (currentVersion && bumpVersion(currentVersion, (
+      (includes(masterDataKeys, 'breaking changes') && 'breaking') ||
+      (includes(masterDataKeys, 'new features') && 'feature') ||
+      'bugfix'
+    ))) ||
+    '1.0.0'
+  );
   stream.write(`Detected version ${newVersion}\n`);
 
   const newVersionData = Object.assign({
