@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const originalConsoleLog = console.log;
 
 const plan = /^\d+\.\.\d+$/;
-const footer = /^#\s+(tests|pass|fail)\b/;
+const footer = /^#\s+(tests\b|pass\b|fail\b|ok$)/;
 const comment = /^#\s+/;
 const ok = /^ok\s+\d+\s+/;
 const notOk = /^not ok\s+\d+\s+/;
