@@ -4,6 +4,7 @@ const test = require('tape-catch');
 const u = require('untab');
 const mockFs = require('mock-fs');
 const fs = require('fs');
+const qs = require('q-stream');
 
 const yankee = require('.');
 
@@ -13,10 +14,10 @@ test('Detects the initial release', (is) => {
       note: Initial release
   ` });
 
-  const stream = (chunk) => {
+  const stream = qs((chunk) => {
     is.equal(chunk, 'Detected version 1.0.0\n');
     is.end();
-  };
+  });
 
   yankee({ path: '/my/project', date: new Date('2016-05-14'), stream });
 
@@ -36,10 +37,10 @@ test('Detects a breaking release', (is) => {
       note: Whatever
   ` });
 
-  const stream = (chunk) => {
+  const stream = qs((chunk) => {
     is.equal(chunk, 'Detected version 2.0.0\n');
     is.end();
-  };
+  });
 
   yankee({ path: '/my/project', date: new Date('2016-05-14'), stream });
 
@@ -59,10 +60,10 @@ test('Detects a feature release', (is) => {
       new features: Whatever
   ` });
 
-  const stream = (chunk) => {
+  const stream = qs((chunk) => {
     is.equal(chunk, 'Detected version 1.3.0\n');
     is.end();
-  };
+  });
 
   yankee({ path: '/my/project', date: new Date('2016-05-14'), stream });
 
@@ -85,10 +86,10 @@ test('Detects a bugfix release', (is) => {
       note: Whatever
   ` });
 
-  const stream = (chunk) => {
+  const stream = qs((chunk) => {
     is.equal(chunk, 'Detected version 1.2.4\n');
     is.end();
-  };
+  });
 
   yankee({ path: '/my/project', date: new Date('2016-05-14'), stream });
 
