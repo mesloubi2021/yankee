@@ -1,5 +1,4 @@
-require('./test/formatter');
-
+require('tap-spec-integrated');
 const test = require('tape-catch');
 const u = require('untab');
 const mockFs = require('mock-fs');
