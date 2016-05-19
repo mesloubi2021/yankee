@@ -42,7 +42,7 @@ module.exports = (paramsArg) => {
   const params = paramsArg || {};
   const path = params.path || process.cwd();
   const date = params.date || new Date();
-  // const stream = params.stream || process.stdout;
+  const stream = params.stream || process.stdout;
 
   const changelogPath = `${path}/Changelog.yaml`;
   const changelog = yaml.safeLoad(fs.readFileSync(changelogPath, 'utf8'));
@@ -67,6 +67,8 @@ module.exports = (paramsArg) => {
     (includes(masterDataKeys, 'new features') && 'feature') ||
     'bugfix'
   ));
+  stream.write(`Detected version ${newVersion}\n`);
+
   const newVersionData = Object.assign({
     date: dateFormat('yyyy-MM-dd', date),
   }, masterData);
