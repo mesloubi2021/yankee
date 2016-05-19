@@ -58,6 +58,9 @@ test('Detects a feature release', (is) => {
   mockFs({ '/my/project/Changelog.yaml': u`
     master:
       new features: Whatever
+
+    1.2.3:
+      note: Whatever
   ` });
 
   const stream = qs((chunk) => {
