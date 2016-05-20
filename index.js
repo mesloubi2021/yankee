@@ -1,3 +1,6 @@
+'use strict'; // eslint-disable-line strict
+  // http://stackoverflow.com/q/33063206
+
 const fs = require('fs');
 const yaml = require('js-yaml');
 const tinyError = require('tiny-error');
@@ -7,7 +10,7 @@ const includes = require('array-includes');
 const dateFormat = require('date-format');
 
 // (String) => Error
-const error = (message) => (
+const prettyError = (message) => (
   tinyError(`Oops! Things went wrong. ${message}`)
 );
 
@@ -42,6 +45,10 @@ const nextVersion = (previousVersion, bump) => {
 
     stream = process.stdout: WritableStream,
       // Stream to write messages to
+
+    npm = false: Boolean,
+      // If `true`, we’ll update the `version` in the `package.json`
+      // and `npm-shrinkwrap.json`
   }) =>
     Void
  */
@@ -49,16 +56,17 @@ module.exports = (paramsArg) => {
   const params = paramsArg || {};
   const path = params.path || process.cwd();
   const date = params.date || new Date();
+  const npm = params.npm || false;
 
   const changelogPath = `${path}/Changelog.yaml`;
   const changelog = yaml.safeLoad(fs.readFileSync(changelogPath, 'utf8'));
 
   if (!isObject(changelog)) {
-    throw error('Make sure `Changelog.yaml` is a YAML object.');
+    throw prettyError('Make sure `Changelog.yaml` is a YAML object.');
   }
 
   if (!changelog.hasOwnProperty('master')) {
-    throw error(
+    throw prettyError(
       'Make sure you have a top-level `master:` property in your ' +
       '`Changelog.yaml`.'
     );
@@ -90,6 +98,38 @@ module.exports = (paramsArg) => {
     .replace(/(.)\n([^\s])/g, '$1\n\n$2');
 
   fs.writeFileSync(changelogPath, newChangelogString);
+
+  const tryUpdatingFile = (filename) => {
+    let fileContents;
+    try {
+      fileContents = fs.readFileSync(`${path}/${filename}`, 'utf8');
+    } catch (error) {
+      if (error.code === 'ENOENT') return;
+      throw error;
+    }
+
+    let data;
+    try {
+      data = JSON.parse(fileContents);
+    } catch (error) {
+      if (error instanceof SyntaxError) throw prettyError(
+        `Make sure \`${filename}\` is valid JSON.`
+      );
+    }
+    if (typeof data !== 'object' || data === null) throw prettyError(
+      `Make sure \`${filename}\` is a JSON object.`
+    );
+
+    data.version = newVersion;
+    fs.writeFileSync(
+      `${path}/${filename}`,
+      `${JSON.stringify(data, null, '  ')}\n`
+    );
+  };
+
+  if (npm) {
+    ['package.json', 'npm-shrinkwrap.json'].forEach(tryUpdatingFile);
+  }
 
   return {
     bump,

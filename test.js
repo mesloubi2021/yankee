@@ -151,3 +151,111 @@ test('Fails when the `Changelog.yaml` doesn’t contain `master:`', (is) => {
 
   is.end();
 });
+
+const testInitialRelease = (title, callback) => {
+  test(title, (is) => {
+    const mockFsProxy = (options) => mockFs(
+      Object.assign(
+        { '/my/project/Changelog.yaml': u`
+          master:
+            note: Initial release
+        ` },
+        options
+      )
+    );
+
+    const yankeeProxy = (options) => yankee(
+      Object.assign(
+        { path: '/my/project', date: new Date('2016-05-14') },
+        options
+      )
+    );
+
+    callback(mockFsProxy, yankeeProxy, is);
+  });
+};
+
+testInitialRelease('`npm` works', (mockFsProxy, yankeeProxy, is) => {
+  mockFsProxy({
+    '/my/project/package.json': '{ "version": "0.0.0" }',
+    '/my/project/npm-shrinkwrap.json': '{}',
+  });
+
+  yankeeProxy({ npm: true });
+
+  is.equal(
+    fs.readFileSync('/my/project/package.json', 'utf8'),
+    u`
+      {
+        "version": "1.0.0"
+      }
+    `,
+    'updates the `version` in the `package.json`'
+  );
+
+  is.equal(
+    fs.readFileSync('/my/project/npm-shrinkwrap.json', 'utf8'),
+    u`
+      {
+        "version": "1.0.0"
+      }
+    `,
+    'adds a `version` to the `npm-shrinkwrap.json`'
+  );
+
+  is.end();
+});
+
+testInitialRelease((
+  'File update fails silently if file doesn’t exist'
+), (mockFsProxy, yankeeProxy, is) => {
+  mockFsProxy({});
+
+  try {
+    yankeeProxy({ npm: true });
+  } catch (_) {
+    is.fail('no error is thrown');
+  }
+
+  is.end();
+});
+
+testInitialRelease((
+  'File update fails gracefully if file is not valid JSON'
+), (mockFsProxy, yankeeProxy, is) => {
+  is.plan(1);
+
+  mockFsProxy({
+    '/my/project/package.json': 'invalid JSON',
+  });
+
+  try {
+    yankeeProxy({ npm: true });
+  } catch (error) {
+    is.ok(/valid json/i.test(error),
+      'with a helpful message'
+    );
+  }
+
+  is.end();
+});
+
+testInitialRelease((
+  'File update fails gracefully if file is not a JSON object'
+), (mockFsProxy, yankeeProxy, is) => {
+  is.plan(1);
+
+  mockFsProxy({
+    '/my/project/package.json': 'null',
+  });
+
+  try {
+    yankeeProxy({ npm: true });
+  } catch (error) {
+    is.ok(/a json object/i.test(error),
+      'with a helpful message'
+    );
+  }
+
+  is.end();
+});
