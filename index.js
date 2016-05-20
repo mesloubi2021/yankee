@@ -84,7 +84,8 @@ module.exports = (paramsArg) => {
   }, changelogWithoutMaster);
   const newChangelogString = yaml.safeDump(newChangelog)
     // Reformat dates
-    .replace(/(date:.*)'(.*)'/g, '$1$2')
+    .replace(/(^\s*date:\s*)'(.*)'$/mg, '$1$2')
+    .replace(/(^\s*date:\s*)(\d{4}-\d{2}-\d{2})[tT][\d:\.+zZ]+$/mg, '$1$2')
     // Add more air
     .replace(/(.)\n([^\s])/g, '$1\n\n$2');
 
