@@ -2,6 +2,9 @@
   "name": "yankee",
   "version": "0.0.0",
   "description": "Changelogs meet YAML",
+  "bin": {
+    "yankee": "bin/yankee"
+  },
   "scripts": {
     "coverage": "rm -rf coverage && istanbul cover test.js",
     "coveralls": "npm run coverage && cat coverage/lcov.info | coveralls",

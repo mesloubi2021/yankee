@@ -1,24 +1,19 @@
 #! /usr/bin/env node
 
 const commander = require('commander');
+const yankee = require('..');
 
-const list = (value) => value.split(',');
+const options = {};
 
-const program = commander
-  .option('-c, --commit',
-    'Create a commit'
+commander
+  .arguments('[path]',
+    'The path to your project directory. Should contain a `Changelog.yaml`.',
+    '$(pwd)'
   )
-  .option('-m, --message <message>',
-    'Commit message (default: “Release %s”)'
-  )
-  .option('-t, --tag',
-    'Tag the repo (implies --commit)'
-  )
-  .option('-p, --publish',
-    'Publish the package on npm'
-  )
-  .option('-P, --push [remotes]',
-    'Git-push to the specified remotes (comma-separated, default: origin)',
-    list
-  )
+  .action((path) => {
+    options.path = path;
+  })
   .parse(process.argv);
+
+const bumpData = yankee(options);
+process.stdout.write(`${bumpData.newVersion}\n`);
