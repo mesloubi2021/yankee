@@ -106,6 +106,9 @@ Attempt to update the `version` field in `package.json` and `npm-shrinkwrap.json
 #### `-c, --commit`
 Commit changes. The commit message will be the raw version number.
 
+#### `-t, --tag`
+Tag the commit with an annotated tag. The tag name will be the raw version number preceeded with a “v”. Implies `--commit`.
+
 #### `-h, --help`
 You’re looking at it.
 <!-- @options end -->
