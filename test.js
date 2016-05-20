@@ -111,21 +111,3 @@ test('Detects a bugfix release', (is) => {
   );
   is.end();
 });
-
-testInitialRelease = (title, callback) => {
-  test(title, (is) => {
-    mockFs({ '/my/project/Changelog.yaml': u`
-      master:
-        note: Initial release
-    ` });
-
-    const yankeeProxy = (options) => yankee(
-      Object.assign(
-        { path: '/my/project', date: new Date('2016-05-14') },
-        options
-      )
-    );
-
-    callback(yankeeProxy, is);
-  });
-};
