@@ -96,6 +96,8 @@ If you call `yankee` without any options, we’ll only output the version number
 ## Options
 
 <!-- @options start -->
+#### `[path]`
+The path to your project directory. Should contain a `Changelog.yaml`. Default: `$(pwd)`.
 <!-- @options end -->
 
 
