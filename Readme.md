@@ -100,6 +100,9 @@ If you call `yankee` without any options, we’ll only output the version number
 #### `[path]`
 The path to your project directory. Should contain a `Changelog.yaml`. Default: `$(pwd)`.
 
+#### `-n, --npm`
+Attempt to update the `version` field in `package.json` and `npm-shrinkwrap.json`.
+
 #### `-h, --help`
 You’re looking at it.
 <!-- @options end -->
