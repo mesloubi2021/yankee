@@ -147,7 +147,7 @@ $ cat << ——— > Changelog.yaml
   ———
 ```
 
-When ready for a release, `yankee` will figure out what release number should be:
+When ready for a release, `yankee` will figure out what the release number should be:
 
 ```yaml
 $ yankee
