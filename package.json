@@ -22,6 +22,7 @@
     "array-includes": "^3.0.2",
     "commander": "^2.9.0",
     "date-format": "0.0.2",
+    "hasbin": "^1.2.2",
     "isobject": "^2.1.0",
     "js-yaml": "^3.6.1",
     "object.omit": "^2.0.0",
