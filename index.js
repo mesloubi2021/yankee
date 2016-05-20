@@ -8,6 +8,7 @@ const isObject = require('isobject');
 const omit = require('object.omit');
 const includes = require('array-includes');
 const dateFormat = require('date-format');
+const spawnSync = require('child_process').spawnSync;
 
 // (String) => Error
 const prettyError = (message) => (
@@ -49,6 +50,9 @@ const nextVersion = (previousVersion, bump) => {
     npm = false: Boolean,
       // If `true`, we’ll update the `version` in the `package.json`
       // and `npm-shrinkwrap.json`
+
+    commit = false: Boolean,
+      // If `true`, we’ll commit the results with git
   }) =>
     Void
  */
@@ -57,6 +61,7 @@ module.exports = (paramsArg) => {
   const path = params.path || process.cwd();
   const date = params.date || new Date();
   const npm = params.npm || false;
+  const commit = params.commit || false;
 
   const changelogPath = `${path}/Changelog.yaml`;
   const changelog = yaml.safeLoad(fs.readFileSync(changelogPath, 'utf8'));
@@ -127,8 +132,21 @@ module.exports = (paramsArg) => {
     );
   };
 
-  if (npm) {
-    ['package.json', 'npm-shrinkwrap.json'].forEach(tryUpdatingFile);
+  const jsonFilesToUpdate = (npm
+    ? ['package.json', 'npm-shrinkwrap.json']
+    : []
+  );
+  jsonFilesToUpdate.forEach(tryUpdatingFile);
+
+  if (commit) {
+    const args = [
+      'commit', `--message=${newVersion}`, 'Changelog.yaml',
+    ].concat(
+      jsonFilesToUpdate
+    );
+
+    process.stdout.write(`\n❭ git ${args.join(' ')}\n`);
+    spawnSync('git', args, { cwd: path, stdio: 'inherit' });
   }
 
   return {

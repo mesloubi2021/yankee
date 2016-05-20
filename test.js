@@ -3,8 +3,13 @@ const test = require('tape-catch');
 const u = require('untab');
 const mockFs = require('mock-fs');
 const fs = require('fs');
+const proxyquire = require('proxyquire');
+const includes = require('array-includes');
 
 const yankee = require('.');
+
+const date = new Date('2016-05-20');
+const path = '/my/project';
 
 test('Detects the initial release', (is) => {
   mockFs({ '/my/project/Changelog.yaml': u`
@@ -12,7 +17,7 @@ test('Detects the initial release', (is) => {
       note: Initial release
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
+  const result = yankee({ path, date });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.0.0:
@@ -38,7 +43,7 @@ test('Detects a breaking release', (is) => {
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
+  const result = yankee({ path, date });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     2.0.0:
@@ -68,7 +73,7 @@ test('Detects a feature release', (is) => {
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
+  const result = yankee({ path, date });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.3.0:
@@ -98,7 +103,7 @@ test('Detects a bugfix release', (is) => {
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
+  const result = yankee({ path, date });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.2.4:
@@ -124,7 +129,7 @@ test('Fails when the `Changelog.yaml` is not an object', (is) => {
   mockFs({ '/my/project/Changelog.yaml': 'Just a string' });
 
   try {
-    yankee({ path: '/my/project', date: new Date('2016-05-20') });
+    yankee({ path, date });
   } catch (error) {
     is.ok(/a yaml object/i.test(error),
       'fails with a helpful message'
@@ -142,7 +147,7 @@ test('Fails when the `Changelog.yaml` doesn’t contain `master:`', (is) => {
   ` });
 
   try {
-    yankee({ path: '/my/project', date: new Date('2016-05-20') });
+    yankee({ path, date });
   } catch (error) {
     is.ok(/a top-level `master:` property/i.test(error),
       'fails with a helpful message'
@@ -166,7 +171,7 @@ const testInitialRelease = (title, callback) => {
 
     const yankeeProxy = (options) => yankee(
       Object.assign(
-        { path: '/my/project', date: new Date('2016-05-14') },
+        { path, date },
         options
       )
     );
@@ -256,6 +261,49 @@ testInitialRelease((
       'with a helpful message'
     );
   }
+
+  is.end();
+});
+
+testInitialRelease('`commit` works', (mockFsProxy, _, is) => {
+  is.plan(4);
+
+  mockFs.restore();  // Needed for proxyquire to work
+
+  const yankeeStub = proxyquire('.', {
+    child_process: {
+      spawnSync: (command, args, options) => {
+        is.deepEqual(
+          [command, args[0], options.cwd],
+          ['git', 'commit', path],
+          'calls `git commit`'
+        );
+
+        is.equal(
+          args[1],
+          '--message=1.0.0',
+          'commit message equals raw version number'
+        );
+
+        is.equal(
+          args[2],
+          'Changelog.yaml',
+          'ignores staged files and commits `Changelog.yaml`'
+        );
+
+        is.ok(
+          ([
+            'package.json', 'npm-shrinkwrap.json',
+          ].every(file => includes(args, file))),
+          'plays well with `npm`'
+        );
+      },
+    },
+  });
+
+  mockFsProxy({});
+
+  yankeeStub({ npm: true, commit: true, path });
 
   is.end();
 });
