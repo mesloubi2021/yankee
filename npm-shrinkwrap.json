@@ -244,9 +244,9 @@
       "resolved": "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz"
     },
     "commander-to-markdown": {
-      "version": "1.1.0",
-      "from": "commander-to-markdown@>=1.1.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/commander-to-markdown/-/commander-to-markdown-1.1.0.tgz"
+      "version": "1.1.1",
+      "from": "commander-to-markdown@latest",
+      "resolved": "https://registry.npmjs.org/commander-to-markdown/-/commander-to-markdown-1.1.1.tgz"
     },
     "concat-map": {
       "version": "0.0.1",
