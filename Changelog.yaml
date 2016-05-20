@@ -1,3 +1,7 @@
+master:
+  fixed bugs:
+    - The executable is now included in the package.
+
 1.0.0:
   date: 2016-05-20
   note: Initial release

@@ -52,6 +52,7 @@
     "!/test.js",
     "/Readme.md",
     "/License.md",
+    "/bin/",
     "/manpages/"
   ],
   "man": [
