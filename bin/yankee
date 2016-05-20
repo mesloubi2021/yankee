@@ -10,6 +10,8 @@ const yankee = require('..');
 const options = {};
 
 const program = commander
+
+  // Populate the `path`
   .arguments('[path]',
     'The path to your project directory. Should contain a `Changelog.yaml`.',
     '$(pwd)'
@@ -17,11 +19,18 @@ const program = commander
   .action((path) => {
     options.path = path;
   })
+
+  // Parse options
+  .option('-n, --npm',
+    'Attempt to update the `version` field in `package.json` ' +
+    'and `npm-shrinkwrap.json`.'
+  )
   .option('-h, --help',
     'You’re looking at it.'
   )
   .parse(process.argv);
 
+// Custom `--help`
 if (program.hasOwnProperty('help')) {
   const manpagePath =
     resolve(__dirname, '../manpages/elm-live.1');
@@ -39,5 +48,9 @@ if (program.hasOwnProperty('help')) {
   process.exit();
 }
 
+// Populate options
+if (program.hasOwnProperty('npm')) options.npm = true;
+
+// Run yankee and print version
 const bumpData = yankee(options);
 process.stdout.write(`${bumpData.newVersion}\n`);
