@@ -28,6 +28,10 @@ const program = commander
   .option('-c, --commit',
     'Commit changes. The commit message will be the raw version number'
   )
+  .option('-t, --tag',
+    'Tag the commit with an annotated tag. The tag name ' +
+    'will be the raw version number preceeded with a “v”. Implies `--commit`'
+  )
   .option('-h, --help',
     'You’re looking at it.'
   )
@@ -54,6 +58,7 @@ if (program.hasOwnProperty('help')) {
 // Populate options
 if (program.hasOwnProperty('npm')) options.npm = true;
 if (program.hasOwnProperty('commit')) options.commit = true;
+if (program.hasOwnProperty('tag')) options.tag = true;
 
 // Run yankee and print version
 const bumpData = yankee(options);

@@ -1,3 +1,6 @@
+'use strict'; // eslint-disable-line strict
+  // http://stackoverflow.com/q/33063206
+
 require('tap-spec-integrated');
 const test = require('tape-catch');
 const u = require('untab');
@@ -304,6 +307,57 @@ testInitialRelease('`commit` works', (mockFsProxy, _, is) => {
   mockFsProxy({});
 
   yankeeStub({ npm: true, commit: true, path });
+
+  is.end();
+});
+
+testInitialRelease('`tag` works', (mockFsProxy, _, is) => {
+  is.plan(4);
+
+  mockFs.restore();  // Needed for proxyquire to work
+
+  let run = 0;
+  const yankeeStub = proxyquire('.', {
+    child_process: {
+      spawnSync: (command, args, options) => {
+        run++;
+
+        if (run === 1) {
+          is.deepEqual(
+            [command, args[0]],
+            ['git', 'commit'],
+            'implies `commit`'
+          );
+        } else if (run === 2) {
+          is.deepEqual(
+            [command, args.slice(0, 2), options.cwd],
+            ['git', ['tag', '--annotate'], path],
+            'creates an annotated git tag'
+          );
+
+          is.equal(
+            args[2],
+            '--message=1.0.0',
+            'commit message equals raw version number'
+          );
+
+          is.equal(
+            args[3],
+            'v1.0.0',
+            'tag name equals raw version number preceeded with a “v”'
+          );
+        } else {
+          test.fail(
+            'doesn’t run anything else'
+          );
+        }
+      },
+    },
+  });
+
+  mockFsProxy({});
+
+  yankeeStub({ npm: true, tag: true, path });
 
   is.end();
 });

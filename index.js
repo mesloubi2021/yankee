@@ -53,6 +53,9 @@ const nextVersion = (previousVersion, bump) => {
 
     commit = false: Boolean,
       // If `true`, we’ll commit the results with git
+
+    tag = false: Boolean,
+      // If `true`, we’ll tag the results with git. Implies `commit`
   }) =>
     Void
  */
@@ -61,7 +64,8 @@ module.exports = (paramsArg) => {
   const path = params.path || process.cwd();
   const date = params.date || new Date();
   const npm = params.npm || false;
-  const commit = params.commit || false;
+  const commit = params.commit || params.tag || false;
+  const tag = params.tag || false;
 
   const changelogPath = `${path}/Changelog.yaml`;
   const changelog = yaml.safeLoad(fs.readFileSync(changelogPath, 'utf8'));
@@ -144,6 +148,15 @@ module.exports = (paramsArg) => {
     ].concat(
       jsonFilesToUpdate
     );
+
+    process.stdout.write(`\n❭ git ${args.join(' ')}\n`);
+    spawnSync('git', args, { cwd: path, stdio: 'inherit' });
+  }
+
+  if (tag) {
+    const args = [
+      'tag', '--annotate', `--message=${newVersion}`, `v${newVersion}`,
+    ];
 
     process.stdout.write(`\n❭ git ${args.join(' ')}\n`);
     spawnSync('git', args, { cwd: path, stdio: 'inherit' });
