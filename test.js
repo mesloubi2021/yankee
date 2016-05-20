@@ -111,3 +111,37 @@ test('Detects a bugfix release', (is) => {
   );
   is.end();
 });
+
+test('Fails when the `Changelog.yaml` is not an object', (is) => {
+  is.plan(1);
+
+  mockFs({ '/my/project/Changelog.yaml': 'Just a string' });
+
+  try {
+    yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  } catch (error) {
+    is.ok(/a yaml object/i.test(error),
+      'fails with a helpful message'
+    );
+  }
+
+  is.end();
+});
+
+test('Fails when the `Changelog.yaml` doesn’t contain `master:`', (is) => {
+  is.plan(1);
+
+  mockFs({ '/my/project/Changelog.yaml': u`
+    any old: object
+  ` });
+
+  try {
+    yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  } catch (error) {
+    is.ok(/a top-level `master:` property/i.test(error),
+      'fails with a helpful message'
+    );
+  }
+
+  is.end();
+});
