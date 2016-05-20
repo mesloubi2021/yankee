@@ -12,11 +12,11 @@ test('Detects the initial release', (is) => {
       note: Initial release
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.0.0:
-      date: 2016-05-14
+      date: 2016-05-20
       note: Initial release
   `);
 
@@ -34,17 +34,19 @@ test('Detects a breaking release', (is) => {
       breaking changes: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     2.0.0:
-      date: 2016-05-14
+      date: 2016-05-20
       breaking changes: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   `);
 
@@ -62,17 +64,19 @@ test('Detects a feature release', (is) => {
       new features: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.3.0:
-      date: 2016-05-14
+      date: 2016-05-20
       new features: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   `);
 
@@ -90,17 +94,19 @@ test('Detects a bugfix release', (is) => {
       fixed bugs: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   ` });
 
-  const result = yankee({ path: '/my/project', date: new Date('2016-05-14') });
+  const result = yankee({ path: '/my/project', date: new Date('2016-05-20') });
 
   is.equal(fs.readFileSync('/my/project/Changelog.yaml', 'utf8'), u`
     1.2.4:
-      date: 2016-05-14
+      date: 2016-05-20
       fixed bugs: Whatever
 
     1.2.3:
+      date: 2016-05-19
       note: Whatever
   `);
 
@@ -118,7 +124,7 @@ test('Fails when the `Changelog.yaml` is not an object', (is) => {
   mockFs({ '/my/project/Changelog.yaml': 'Just a string' });
 
   try {
-    yankee({ path: '/my/project', date: new Date('2016-05-14') });
+    yankee({ path: '/my/project', date: new Date('2016-05-20') });
   } catch (error) {
     is.ok(/a yaml object/i.test(error),
       'fails with a helpful message'
@@ -136,7 +142,7 @@ test('Fails when the `Changelog.yaml` doesn’t contain `master:`', (is) => {
   ` });
 
   try {
-    yankee({ path: '/my/project', date: new Date('2016-05-14') });
+    yankee({ path: '/my/project', date: new Date('2016-05-20') });
   } catch (error) {
     is.ok(/a top-level `master:` property/i.test(error),
       'fails with a helpful message'
