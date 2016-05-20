@@ -1,11 +1,15 @@
 #! /usr/bin/env node
 
 const commander = require('commander');
+const hasbinSync = require('hasbin').sync;
+const spawnSync = require('child_process').spawnSync;
+const resolve = require('path').resolve;
+const readFileSync = require('fs').readFileSync;
 const yankee = require('..');
 
 const options = {};
 
-commander
+const program = commander
   .arguments('[path]',
     'The path to your project directory. Should contain a `Changelog.yaml`.',
     '$(pwd)'
@@ -13,7 +17,27 @@ commander
   .action((path) => {
     options.path = path;
   })
+  .option('-h, --help',
+    'You’re looking at it.'
+  )
   .parse(process.argv);
+
+if (program.hasOwnProperty('help')) {
+  const manpagePath =
+    resolve(__dirname, '../manpages/elm-live.1');
+
+  if (hasbinSync('man')) {
+    const manProcess =
+      spawnSync('man', [manpagePath], { stdio: 'inherit' });
+    if (manProcess.error) throw manProcess.error;
+  } else {
+    process.stdout.write(
+      readFileSync(`${manpagePath}.txt`, 'utf8')
+    );
+  }
+
+  process.exit();
+}
 
 const bumpData = yankee(options);
 process.stdout.write(`${bumpData.newVersion}\n`);
