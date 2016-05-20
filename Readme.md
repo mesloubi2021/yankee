@@ -103,6 +103,9 @@ The path to your project directory. Should contain a `Changelog.yaml`. Default: 
 #### `-n, --npm`
 Attempt to update the `version` field in `package.json` and `npm-shrinkwrap.json`.
 
+#### `-c, --commit`
+Commit changes. The commit message will be the raw version number.
+
 #### `-h, --help`
 You’re looking at it.
 <!-- @options end -->
