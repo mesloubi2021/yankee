@@ -21,7 +21,8 @@
 
 # yankee
 
-**Changelogs meet YAML**
+**Release management made easy  
+with YAML changelogs**
 
 
 
