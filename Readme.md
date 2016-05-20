@@ -47,7 +47,7 @@ npm install --save-dev yankee
 ## Synopsis
 
 ```sh
-yankee [<path>]
+yankee [<path>]  
 yankee [--help]
 ```
 
@@ -165,4 +165,4 @@ $ cat Changelog.yaml
 
 ## License
 
-[MIT](./License.md) © [Studio B12](http://studio-b12.de)
+[MIT](https://github.com/studio-b12/yankee/License.md) © [Studio B12](http://studio-b12.de)
