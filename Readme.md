@@ -80,7 +80,7 @@ master:
   note: Initial release.
 ```
 
-When you call `yankee`, we’ll determine what version number comes next and update the file accordingly: replace `master` with the new version and add a `date` property with the current day.
+When you call `yankee`, we’ll determine what version number comes next and update the file accordingly. We’ll replace `master:` with the new version and add a `date:` property with the current day right below that.
 
 If the `master:` object contains the key `breaking changes:`, we’ll make it a major release (X.y.z). If it contains the key `new features:`, we’ll make a minor bump (x.Y.z). Otherwise, make sure your `master:` changelog has the key `fixed bugs:` – we’ll release it as a patch (x.y.Z).
 
