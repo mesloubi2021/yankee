@@ -47,7 +47,7 @@ npm install --save-dev yankee
 
 ```sh
 yankee [<path>]  
-yankee [--help]
+yankee --help
 ```
 
 
