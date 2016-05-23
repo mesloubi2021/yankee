@@ -21,8 +21,7 @@
 
 # yankee
 
-**Release management made easy  
-with YAML changelogs**
+**Easy release management with YAML changelogs**
 
 
 

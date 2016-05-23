@@ -15,7 +15,7 @@ rm -rf manpages/*
 #   * Render
 cat Readme.md \
   | perl -0777 -pe 's/^[\S\s]*?\n(# )/$1/' \
-  | perl -0777 -pe 's/(^# [^\s]+)\n\n\*\*(.+)  \n(.+)\*\*/$1(1) -- $2. $3/' \
+  | perl -0777 -pe 's/(^# [^\s]+)\n\n\*\*(.+)\*\*/$1(1) -- $2/' \
   | perl -0777 -pe 's/(\n## .+\n)/\U$1/g' \
   | perl -0777 -pe 's/\n## INSTALLATION[\S\s]*?(?=\n## )//' \
   | perl -0777 -pe 's/<\/?(?:a|p|img)\b[\S\s]*?>//g' \
