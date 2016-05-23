@@ -23,13 +23,13 @@ cat Readme.md \
   | perl -0777 -pe 's/```sh\n([\S\s]*?\n)```\n/$1/' \
   | marked-man \
     --version=v$(node -p 'require("./package.json").version') \
-  > manpages/elm-live.1
+  > manpages/yankee.1
 
 # 2. Render the plain-text fallback
 #   * Limit line width to 80 chars
 #   * Render with man
 #   * Collapse consecutive blank lines (matches default behavior)
 MANWIDTH=80 \
-man manpages/elm-live.1 \
+man manpages/yankee.1 \
   | perl -0777 -pe 's/\n{2,}/\n\n/g' \
-  > manpages/elm-live.1.txt
+  > manpages/yankee.1.txt

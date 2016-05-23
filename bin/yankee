@@ -40,7 +40,7 @@ const program = commander
 // Custom `--help`
 if (program.hasOwnProperty('help')) {
   const manpagePath =
-    resolve(__dirname, '../manpages/elm-live.1');
+    resolve(__dirname, '../manpages/yankee.1');
 
   if (hasbinSync('man')) {
     const manProcess =
