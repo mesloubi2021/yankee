@@ -1,4 +1,5 @@
-master:
+1.0.4:
+  date: 2016-05-24
   fixed bugs:
     - Removed stability badge.
 
