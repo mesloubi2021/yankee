@@ -33,6 +33,8 @@ test('Detects the initial release', (is) => {
     { previousVersion: undefined, newVersion: '1.0.0', bump: 'initial' },
     'reports correct bump data'
   );
+
+  mockFs.restore();
   is.end();
 });
 
@@ -63,6 +65,8 @@ test('Detects a breaking release', (is) => {
     { previousVersion: '1.2.3', newVersion: '2.0.0', bump: 'breaking' },
     'reports correct bump data'
   );
+
+  mockFs.restore();
   is.end();
 });
 
@@ -93,6 +97,8 @@ test('Detects a feature release', (is) => {
     { previousVersion: '1.2.3', newVersion: '1.3.0', bump: 'feature' },
     'reports correct bump data'
   );
+
+  mockFs.restore();
   is.end();
 });
 
@@ -123,6 +129,8 @@ test('Detects a bugfix release', (is) => {
     { previousVersion: '1.2.3', newVersion: '1.2.4', bump: 'bugfix' },
     'reports correct bump data'
   );
+
+  mockFs.restore();
   is.end();
 });
 
@@ -139,6 +147,7 @@ test('Fails when the `Changelog.yaml` is not an object', (is) => {
     );
   }
 
+  mockFs.restore();
   is.end();
 });
 
@@ -157,6 +166,7 @@ test('Fails when the `Changelog.yaml` doesn’t contain `master:`', (is) => {
     );
   }
 
+  mockFs.restore();
   is.end();
 });
 
@@ -211,6 +221,7 @@ testInitialRelease('`npm` works', (mockFsProxy, yankeeProxy, is) => {
     'adds a `version` to the `npm-shrinkwrap.json`'
   );
 
+  mockFs.restore();
   is.end();
 });
 
@@ -225,6 +236,7 @@ testInitialRelease((
     is.fail('no error is thrown');
   }
 
+  mockFs.restore();
   is.end();
 });
 
@@ -245,6 +257,7 @@ testInitialRelease((
     );
   }
 
+  mockFs.restore();
   is.end();
 });
 
@@ -265,13 +278,12 @@ testInitialRelease((
     );
   }
 
+  mockFs.restore();
   is.end();
 });
 
 testInitialRelease('`commit` works', (mockFsProxy, _, is) => {
   is.plan(4);
-
-  mockFs.restore();  // Needed for proxyquire to work
 
   const yankeeStub = proxyquire('.', {
     child_process: {
@@ -308,13 +320,12 @@ testInitialRelease('`commit` works', (mockFsProxy, _, is) => {
 
   yankeeStub({ npm: true, commit: true, path });
 
+  mockFs.restore();
   is.end();
 });
 
 testInitialRelease('`tag` works', (mockFsProxy, _, is) => {
   is.plan(4);
-
-  mockFs.restore();  // Needed for proxyquire to work
 
   let run = 0;
   const yankeeStub = proxyquire('.', {
@@ -359,5 +370,6 @@ testInitialRelease('`tag` works', (mockFsProxy, _, is) => {
 
   yankeeStub({ npm: true, tag: true, path });
 
+  mockFs.restore();
   is.end();
 });
