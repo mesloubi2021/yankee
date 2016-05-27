@@ -316,7 +316,42 @@ testInitialRelease('`commit` works', (mockFsProxy, _, is) => {
     },
   });
 
-  mockFsProxy({});
+  mockFsProxy({
+    '/my/project/package.json': '{}',
+    '/my/project/npm-shrinkwrap.json': '{}',
+  });
+
+  yankeeStub({ npm: true, commit: true, path });
+
+  mockFs.restore();
+  is.end();
+});
+
+testInitialRelease((
+  '`commit` doesn’t break when no `npm-shrinkwrap.json` is present'
+), (mockFsProxy, _, is) => {
+  is.plan(2);
+
+  const yankeeStub = proxyquire('.', {
+    child_process: {
+      spawnSync: (command, args, options) => {
+        is.deepEqual(
+          [command, args[0], options.cwd],
+          ['git', 'commit', path],
+          'calls `git commit`'
+        );
+
+        is.notOk(
+          includes(args, 'npm-shrinkwrap.json'),
+          'doesn’t try to commit non-existent files'
+        );
+      },
+    },
+  });
+
+  mockFsProxy({
+    '/my/project/package.json': '{}',
+  });
 
   yankeeStub({ npm: true, commit: true, path });
 

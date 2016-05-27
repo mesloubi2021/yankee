@@ -113,7 +113,7 @@ module.exports = (paramsArg) => {
     try {
       fileContents = fs.readFileSync(`${path}/${filename}`, 'utf8');
     } catch (error) {
-      if (error.code === 'ENOENT') return;
+      if (error.code === 'ENOENT') return null;
       throw error;
     }
 
@@ -134,19 +134,23 @@ module.exports = (paramsArg) => {
       `${path}/${filename}`,
       `${JSON.stringify(data, null, '  ')}\n`
     );
+
+    return filename;
   };
 
   const jsonFilesToUpdate = (npm
     ? ['package.json', 'npm-shrinkwrap.json']
     : []
   );
-  jsonFilesToUpdate.forEach(tryUpdatingFile);
+  const updatedFiles = jsonFilesToUpdate
+    .map(tryUpdatingFile)
+    .filter(filename => filename !== null);
 
   if (commit) {
     const args = [
       'commit', `--message=${newVersion}`, 'Changelog.yaml',
     ].concat(
-      jsonFilesToUpdate
+      updatedFiles
     );
 
     process.stdout.write(`\n❭ git ${args.join(' ')}\n`);
