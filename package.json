@@ -1,6 +1,6 @@
 {
   "name": "yankee",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Easy release management with YAML changelogs",
   "bin": {
     "yankee": "bin/yankee"

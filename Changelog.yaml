@@ -1,4 +1,5 @@
-master:
+1.0.5:
+  date: 2016-05-27
   fixed bugs:
     - Fixed `--npm --commit` in a repo without `npm-shrinkwrap.json`.
 
