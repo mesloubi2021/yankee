@@ -233,6 +233,7 @@ testInitialRelease((
   try {
     yankeeProxy({ npm: true });
   } catch (_) {
+    /* istanbul ignore next */
     is.fail('no error is thrown');
   }
 
@@ -393,9 +394,8 @@ testInitialRelease('`tag` works', (mockFsProxy, _, is) => {
             'tag name equals raw version number preceeded with a “v”'
           );
         } else {
-          test.fail(
-            'doesn’t run anything else'
-          );
+          /* istanbul ignore next */
+          test.fail('doesn’t run anything else');
         }
       },
     },

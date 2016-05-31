@@ -114,6 +114,7 @@ module.exports = (paramsArg) => {
       fileContents = fs.readFileSync(`${path}/${filename}`, 'utf8');
     } catch (error) {
       if (error.code === 'ENOENT') return null;
+      /* istanbul ignore next */
       throw error;
     }
 
