@@ -1,4 +1,5 @@
-master:
+1.0.7:
+  date: 2016-05-31
   fixed bugs:
     - Fixed broken API signature.
 
