@@ -56,8 +56,12 @@ const nextVersion = (previousVersion, bump) => {
 
     tag = false: Boolean,
       // If `true`, we’ll tag the results with git. Implies `commit`
-  }) =>
-    Void
+
+  }) => {
+    bump: 'breaking' | 'feature' | 'bugfix' | 'initial',
+    previousVersion: String,
+    newVersion: String,
+  }
  */
 module.exports = (paramsArg) => {
   const params = paramsArg || {};
