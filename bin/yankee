@@ -1,65 +1,32 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
-const commander = require('commander');
-const hasbinSync = require('hasbin').sync;
-const spawnSync = require('child_process').spawnSync;
-const resolve = require('path').resolve;
-const readFileSync = require('fs').readFileSync;
+const { Command } = require('commander');
 const yankee = require('..');
 
-const options = {};
+const program = new Command();
 
-const program = commander
-
-  // Populate the `path`
+program
   .arguments('[path]',
     'The path to your project directory. Should contain a `Changelog.yaml`.',
-    '$(pwd)'
-  )
-  .action((path) => {
-    options.path = path;
-  })
-
-  // Parse options
+    '$(pwd)')
   .option('-n, --npm',
-    'Attempt to update the `version` field in `package.json` ' +
-    'and `npm-shrinkwrap.json`.'
-  )
+    'Attempt to update the `version` field in `package.json` '
+    + 'and `npm-shrinkwrap.json`.')
   .option('-c, --commit',
-    'Commit changes. The commit message will be the raw version number'
-  )
+    'Commit changes. The commit message will be the raw version number')
   .option('-t, --tag',
-    'Tag the commit with an annotated tag. The tag name ' +
-    'will be the raw version number preceeded with a “v”. Implies `--commit`'
-  )
-  .option('-h, --help',
-    'You’re looking at it.'
-  )
-  .parse(process.argv);
+    'Tag the commit with an annotated tag. The tag name '
+    + 'will be the raw version number preceeded with a “v”. Implies `--commit`')
+  .action((path, options) => {
+    // eslint-disable-next-line no-param-reassign
+    options.path = path;
 
-// Custom `--help`
-if (program.hasOwnProperty('help')) {
-  const manpagePath =
-    resolve(__dirname, '../manpages/yankee.1');
+    try {
+      process.stdout.write(`${yankee(options).newVersion}\n`);
+    } catch (error) {
+      process.stderr.write(`${error.message || error}\n`);
+      process.exit(1);
+    }
+  });
 
-  if (hasbinSync('man')) {
-    const manProcess =
-      spawnSync('man', [manpagePath], { stdio: 'inherit' });
-    if (manProcess.error) throw manProcess.error;
-  } else {
-    process.stdout.write(
-      readFileSync(`${manpagePath}.txt`, 'utf8')
-    );
-  }
-
-  process.exit();
-}
-
-// Populate options
-if (program.hasOwnProperty('npm')) options.npm = true;
-if (program.hasOwnProperty('commit')) options.commit = true;
-if (program.hasOwnProperty('tag')) options.tag = true;
-
-// Run yankee and print version
-const bumpData = yankee(options);
-process.stdout.write(`${bumpData.newVersion}\n`);
+program.parse();
