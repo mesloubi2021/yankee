@@ -4,9 +4,3 @@
 # - NPM stuff
 /node_modules/
 /npm-debug.log
-
-# - Test coverage reports
-/coverage/
-
-# - Other stuff (if applicable)
-/manpages/
