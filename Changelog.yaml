@@ -1,3 +1,16 @@
+unreleased:
+  new features:
+    - Support `unreleased:` top-level key.
+    - Support case-insensitive `changelog.yaml` file name.
+  chores:
+    - Updated Update yankee CLI.
+    - Updated dependencies.
+
+1.0.8:
+  date: 2017-10-27
+  fixed bugs:
+    - Support for npm5.
+
 1.0.7:
   date: 2016-05-31
   fixed bugs:
