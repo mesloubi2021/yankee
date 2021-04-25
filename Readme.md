@@ -5,10 +5,10 @@
 
 ```sh
 # As a global command:
-npm install --global yankee
+npm install --global @postman/yankee
 
 # …or locally for an npm project:
-npm install --save-dev yankee
+npm install --save-dev @postman/yankee
 ```
 
 ## Usage
